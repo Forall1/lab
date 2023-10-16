@@ -1,0 +1,33 @@
+#include <iostream>
+
+void findLargestAndSmallest(const int* arr, int size, int& largest, int& smallest) {
+    if (size <= 0) {
+        // Handle the case when the array is empty or invalid.
+        return;
+    }
+
+    // Initialize largest and smallest with the first element of the array.
+    largest = smallest = arr[0];
+
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > largest) {
+            largest = arr[i];
+        }
+        if (arr[i] < smallest) {
+            smallest = arr[i];
+        }
+    }
+}
+
+int main() {
+    int arr[] = {12, 45, 7, 56, 23, 90, 3, 8};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    int largest, smallest;
+
+    findLargestAndSmallest(arr, size, largest, smallest);
+
+    std::cout << "Largest: " << largest << std::endl;
+    std::cout << "Smallest: " << smallest << std::endl;
+
+    return 0;
+}
