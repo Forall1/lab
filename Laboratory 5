@@ -1,0 +1,339 @@
+
+//3.1 Piece of cake - 1#
+
+#include <iostream>
+#include <cstdlib> // for malloc and free
+
+void printIntegerValue() {
+    // Declare an integer variable and assign it a value
+    int* integerVariable = (int*)malloc(sizeof(int));
+    if (integerVariable == nullptr) {
+        std::cerr << "Memory allocation failed." << std::endl;
+        return;
+    }
+
+    *integerVariable = 42; // Assign a value to the integer variable
+
+    // Use a pointer to print the value
+    std::cout << "The value of the integer variable is: " << *integerVariable << std::endl;
+
+    // Deallocate memory
+    free(integerVariable);
+}
+
+int main() {
+    printIntegerValue();
+
+    return 0;
+}
+
+
+//3.1 Piece of cake - 2#
+
+
+#include <iostream>
+#include <cstdlib>
+
+void swapIntegers(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main() {
+    int x, y;
+
+    // Prompt the user to enter the values of x and y
+    std::cout << "Enter the value of x: ";
+    std::cin >> x;
+    std::cout << "Enter the value of y: ";
+    std::cin >> y;
+
+    std::cout << "Before swapping: x = " << x << ", y = " << y << std::endl;
+
+    // Swap the values of x and y using pointers
+    swapIntegers(&x, &y);
+
+    std::cout << "After swapping: x = " << x << ", y = " << y << std::endl;
+
+    return 0;
+}
+
+
+
+_____________
+
+
+3.2 - 1#
+
+#include <iostream>
+#include <cstdlib>
+
+void findMinMax(int* arr, int size, int* min, int* max) {
+    if (size <= 0) {
+        std::cerr << "Array size must be greater than 0." << std::endl;
+        return;
+    }
+
+    *min = *max = arr[0];  // Initialize min and max to the first element
+
+    for (int i = 1; i < size; i++) {
+        if (arr[i] < *min) {
+            *min = arr[i];  // Update min
+        } else if (arr[i] > *max) {
+            *max = arr[i];  // Update max
+        }
+    }
+}
+
+int main() {
+    int size;
+
+    // Prompt the user to enter the size of the array
+    std::cout << "Enter the size of the array: ";
+    std::cin >> size;
+
+    if (size <= 0) {
+        std::cerr << "Array size must be greater than 0." << std::endl;
+        return 1;
+    }
+
+    // Dynamically allocate memory for the array
+    int* arr = (int*)malloc(size * sizeof(int));
+    if (arr == nullptr) {
+        std::cerr << "Memory allocation failed." << std::endl;
+        return 1;
+    }
+
+    // Prompt the user to enter the array elements
+    for (int i = 0; i < size; i++) {
+        std::cout << "Enter element " << i + 1 << ": ";
+        std::cin >> arr[i];
+    }
+
+    int min, max;
+    findMinMax(arr, size, &min, &max);
+
+    std::cout << "Smallest value: " << min << std::endl;
+    std::cout << "Largest value: " << max << std::endl;
+
+    // Deallocate memory for the array
+    free(arr);
+
+    return 0;
+}
+
+_____________________________
+
+
+3.2 - 2#
+
+#include <iostream>
+#include <cstdlib>
+
+int sumOfNegatives(int* arr, int size) {
+    int sum = 0;
+
+    for (int i = 0; i < size; i++) {
+        if (*(arr + i) < 0) {
+            sum += *(arr + i);
+        }
+    }
+
+    return sum;
+}
+
+int main() {
+    int size;
+
+    // Prompt the user to enter the size of the array
+    std::cout << "Enter the size of the array: ";
+    std::cin >> size;
+
+    if (size <= 0) {
+        std::cerr << "Array size must be greater than 0." << std::endl;
+        return 1;
+    }
+
+    // Dynamically allocate memory for the array
+    int* arr = (int*)malloc(size * sizeof(int));
+    if (arr == nullptr) {
+        std::cerr << "Memory allocation failed." << std::endl;
+        return 1;
+    }
+
+    // Prompt the user to enter the array elements
+    for (int i = 0; i < size; i++) {
+        std::cout << "Enter element " << i + 1 << ": ";
+        std::cin >> *(arr + i);
+    }
+
+    int result = sumOfNegatives(arr, size);
+
+    std::cout << "Sum of negative numbers: " << result << std::endl;
+
+    // Deallocate memory for the array
+    free(arr);
+
+    return 0;
+}
+
+
+_______________________
+
+3.2 - 3#
+
+#include <iostream>
+#include <cstdlib>
+
+void reverseArray(int* arr, int size) {
+    int* start = arr;
+    int* end = arr + size - 1;
+
+    while (start < end) {
+        // Swap the elements pointed to by 'start' and 'end'
+        int temp = *start;
+        *start = *end;
+        *end = temp;
+
+        // Move the pointers inward
+        start++;
+        end--;
+    }
+}
+
+int main() {
+    int size;
+
+    // Prompt the user to enter the size of the array
+    std::cout << "Enter the size of the array: ";
+    std::cin >> size;
+
+    if (size <= 0) {
+        std::cerr << "Array size must be greater than 0." << std::endl;
+        return 1;
+    }
+
+    // Dynamically allocate memory for the array
+    int* arr = (int*)malloc(size * sizeof(int));
+    if (arr == nullptr) {
+        std::cerr << "Memory allocation failed." << std::endl;
+        return 1;
+    }
+
+    // Prompt the user to enter the array elements
+    for (int i = 0; i < size; i++) {
+        std::cout << "Enter element " << i + 1 << ": ";
+        std::cin >> *(arr + i);
+    }
+
+    // Reverse the array using pointers
+    reverseArray(arr, size);
+
+    std::cout << "Reversed array:" << std::endl;
+    for (int i = 0; i < size; i++) {
+        std::cout << *(arr + i) << " ";
+    }
+
+    // Deallocate memory for the array
+    free(arr);
+
+    return 0;
+}
+
+
+____________________
+
+3.2 - 4#
+
+#include <iostream>
+
+void transposeMatrix(int** matrix, int& rows, int& cols) {
+    int** transposedMatrix = new int*[cols];
+    for (int i = 0; i < cols; i++) {
+        transposedMatrix[i] = new int[rows];
+    }
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            transposedMatrix[j][i] = matrix[i][j];
+        }
+    }
+
+    // Deallocate the original matrix
+    for (int i = 0; i < rows; i++) {
+        delete[] matrix[i];
+    }
+    delete[] matrix;
+
+    // Update the original matrix pointer to the transposed matrix
+    matrix = transposedMatrix;
+
+    // Update rows and cols for the transposed matrix
+    std::swap(rows, cols);
+}
+
+void printMatrix(int** matrix, int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            std::cout << matrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+int main() {
+    int rows, cols;
+
+    // Ask the user for the number of rows and columns
+    std::cout << "Enter the number of rows: ";
+    std::cin >> rows;
+    std::cout << "Enter the number of columns: ";
+    std::cin >> cols;
+
+    int** matrix = new int*[rows];
+    for (int i = 0; i < rows; i++) {
+        matrix[i] = new int[cols];
+
+        // Ask the user to input matrix elements
+        for (int j = 0; j < cols; j++) {
+            std::cout << "Enter element at [" << i << "][" << j << "]: ";
+            std::cin >> matrix[i][j];
+        }
+    }
+
+    std::cout << "Original Matrix:" << std::endl;
+    printMatrix(matrix, rows, cols);
+
+    transposeMatrix(matrix, rows, cols);
+
+    std::cout << "Transposed Matrix:" << std::endl;
+    printMatrix(matrix, rows, cols);
+
+    // Deallocate memory for the transposed matrix
+    for (int i = 0; i < cols; i++) {
+        delete[] matrix[i];
+    }
+    delete[] matrix;
+
+    return 0;
+}
+
+
+________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
