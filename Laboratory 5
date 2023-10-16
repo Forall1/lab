@@ -247,35 +247,33 @@ ____________________
 3.2 - 4#
 
 #include <iostream>
+#include <cstdlib>
 
-void transposeMatrix(int** matrix, int& rows, int& cols) {
-    int** transposedMatrix = new int*[cols];
-    for (int i = 0; i < cols; i++) {
-        transposedMatrix[i] = new int[rows];
+void transposeMatrix(int** matrix, int n, int m) {
+    int** transposedMatrix = (int**)malloc(m * sizeof(int*));
+    for (int i = 0; i < m; i++) {
+        transposedMatrix[i] = (int*)malloc(n * sizeof(int));
     }
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
             transposedMatrix[j][i] = matrix[i][j];
         }
     }
 
     // Deallocate the original matrix
-    for (int i = 0; i < rows; i++) {
-        delete[] matrix[i];
+    for (int i = 0; i < n; i++) {
+        free(matrix[i]);
     }
-    delete[] matrix;
+    free(matrix);
 
     // Update the original matrix pointer to the transposed matrix
-    matrix = transposedMatrix;
-
-    // Update rows and cols for the transposed matrix
-    std::swap(rows, cols);
+    *matrix = transposedMatrix;
 }
 
-void printMatrix(int** matrix, int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+void printMatrix(int** matrix, int n, int m) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
             std::cout << matrix[i][j] << " ";
         }
         std::cout << std::endl;
@@ -283,45 +281,198 @@ void printMatrix(int** matrix, int rows, int cols) {
 }
 
 int main() {
-    int rows, cols;
+    int n, m;
 
-    // Ask the user for the number of rows and columns
-    std::cout << "Enter the number of rows: ";
-    std::cin >> rows;
-    std::cout << "Enter the number of columns: ";
-    std::cin >> cols;
+    // Prompt the user to enter the size of the matrix
+    std::cout << "Enter the number of rows and columns (n=m): ";
+    std::cin >> n >> m;
 
-    int** matrix = new int*[rows];
-    for (int i = 0; i < rows; i++) {
-        matrix[i] = new int[cols];
+    if (n <= 0 || m <= 0) {
+        std::cerr << "Matrix size must be greater than 0." << std::endl;
+        return 1;
+    }
 
-        // Ask the user to input matrix elements
-        for (int j = 0; j < cols; j++) {
+    // Dynamically allocate memory for the original matrix
+    int** matrix = (int**)malloc(n * sizeof(int*));
+    for (int i = 0; i < n; i++) {
+        matrix[i] = (int*)malloc(m * sizeof(int));
+    }
+
+    // Prompt the user to enter the matrix elements
+    std::cout << "Enter the elements of the matrix:" << std::endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
             std::cout << "Enter element at [" << i << "][" << j << "]: ";
             std::cin >> matrix[i][j];
         }
     }
 
     std::cout << "Original Matrix:" << std::endl;
-    printMatrix(matrix, rows, cols);
+    printMatrix(matrix, n, m);
 
-    transposeMatrix(matrix, rows, cols);
+    transposeMatrix(matrix, n, m);
 
     std::cout << "Transposed Matrix:" << std::endl;
-    printMatrix(matrix, rows, cols);
+    printMatrix(matrix, m, n);
 
     // Deallocate memory for the transposed matrix
-    for (int i = 0; i < cols; i++) {
-        delete[] matrix[i];
+    for (int i = 0; i < m; i++) {
+        free(matrix[i]);
     }
-    delete[] matrix;
+    free(matrix);
 
     return 0;
 }
 
-
 ________________________
 
+3.3 Medium - 1#
+
+#include <iostream>
+#include <cstdlib>
+
+int findIndexOfValue(int* arr, int size, int value) {
+    for (int i = 0; i < size; i++) {
+        if (*(arr + i) == value) {
+            return i; // Return the index of the first occurrence
+        }
+    }
+
+    return -1; // Return -1 if the value is not found
+}
+
+int main() {
+    int k, n, m;
+
+    // Prompt the user to enter the length of the array
+    std::cout << "Enter the length of the array (k): ";
+    std::cin >> k;
+
+    if (k <= 0) {
+        std::cerr << "Array length must be greater than 0." << std::endl;
+        return 1;
+    }
+
+    // Dynamically allocate memory for the array
+    int* arr = (int*)malloc(k * sizeof(int));
+    if (arr == nullptr) {
+        std::cerr << "Memory allocation failed." << std::endl;
+        return 1;
+    }
+
+    // Prompt the user to enter the array elements
+    std::cout << "Enter the elements of the array:" << std::endl;
+    for (int i = 0; i < k; i++) {
+        std::cout << "Enter element " << i + 1 << ": ";
+        std::cin >> *(arr + i);
+    }
+
+    // Prompt the user to enter the value to search for
+    int searchValue;
+    std::cout << "Enter the value to search for: ";
+    std::cin >> searchValue;
+
+    // Find the index of the first occurrence of the search value
+    int index = findIndexOfValue(arr, k, searchValue);
+
+    if (index != -1) {
+        std::cout << "The first occurrence of " << searchValue << " is at index: " << index << std::endl;
+    } else {
+        std::cout << searchValue << " not found in the array." << std::endl;
+    }
+
+    // Deallocate memory for the array
+    free(arr);
+
+    return 0;
+}
+_______________________
+
+3.3 Medium - 4#
+
+#include <iostream>
+#include <cstdlib>
+
+void calculateRowColumnSums(int** matrix, int n, int m, int* rowSums, int* columnSums) {
+    // Initialize row and column sums to 0
+    for (int i = 0; i < n; i++) {
+        rowSums[i] = 0;
+    }
+    for (int j = 0; j < m; j++) {
+        columnSums[j] = 0;
+    }
+
+    // Calculate row sums
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            rowSums[i] += matrix[i][j];
+        }
+    }
+
+    // Calculate column sums
+    for (int j = 0; j < m; j++) {
+        for (int i = 0; i < n; i++) {
+            columnSums[j] += matrix[i][j];
+        }
+    }
+}
+
+void printSums(int* sums, int size, const char* label) {
+    std::cout << label << ": ";
+    for (int i = 0; i < size; i++) {
+        std::cout << sums[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    int k, n, m;
+
+    // Prompt the user to enter the size of the matrix
+    std::cout << "Enter the number of rows and columns (n=m): ";
+    std::cin >> n >> m;
+
+    if (n <= 0 || m <= 0) {
+        std::cerr << "Matrix size must be greater than 0." << std::endl;
+        return 1;
+    }
+
+    // Dynamically allocate memory for the matrix
+    int** matrix = (int**)malloc(n * sizeof(int*));
+    for (int i = 0; i < n; i++) {
+        matrix[i] = (int*)malloc(m * sizeof(int));
+    }
+
+    // Prompt the user to enter the matrix elements
+    std::cout << "Enter the elements of the matrix:" << std::endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            std::cout << "Enter element at [" << i << "][" << j << "]: ";
+            std::cin >> matrix[i][j];
+        }
+    }
+
+    // Dynamically allocate memory for row and column sums
+    int* rowSums = (int*)malloc(n * sizeof(int));
+    int* columnSums = (int*)malloc(m * sizeof(int));
+
+    // Calculate row and column sums
+    calculateRowColumnSums(matrix, n, m, rowSums, columnSums);
+
+    // Print row and column sums
+    printSums(rowSums, n, "Row Sums");
+    printSums(columnSums, m, "Column Sums");
+
+    // Deallocate memory for the matrix and sums
+    for (int i = 0; i < n; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
+    free(rowSums);
+    free(columnSums);
+
+    return 0;
+}
 
 
 
