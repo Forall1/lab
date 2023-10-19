@@ -5,7 +5,7 @@
 #include <cstdlib> // for malloc and free
 
 void printIntegerValue() {
-    // Declare an integer variable and assign it a value
+    
     int* integerVariable = (int*)malloc(sizeof(int));
     if (integerVariable == nullptr) {
         std::cerr << "Memory allocation failed." << std::endl;
@@ -14,7 +14,6 @@ void printIntegerValue() {
 
     *integerVariable = 42; // Assign a value to the integer variable
 
-    // Use a pointer to print the value
     std::cout << "The value of the integer variable is: " << *integerVariable << std::endl;
 
     // Deallocate memory
@@ -87,7 +86,6 @@ void findMinMax(int* arr, int size, int* min, int* max) {
 int main() {
     int size;
 
-    // Prompt the user to enter the size of the array
     std::cout << "Enter the size of the array: ";
     std::cin >> size;
 
@@ -96,15 +94,15 @@ int main() {
         return 1;
     }
 
-    // Dynamically allocate memory for the array
-    int* arr = (int*)malloc(size * sizeof(int));
+
+   int* arr = (int*)malloc(size * sizeof(int));
     if (arr == nullptr) {
         std::cerr << "Memory allocation failed." << std::endl;
         return 1;
     }
 
-    // Prompt the user to enter the array elements
-    for (int i = 0; i < size; i++) {
+
+       for (int i = 0; i < size; i++) {
         std::cout << "Enter element " << i + 1 << ": ";
         std::cin >> arr[i];
     }
@@ -144,7 +142,6 @@ int sumOfNegatives(int* arr, int size) {
 int main() {
     int size;
 
-    // Prompt the user to enter the size of the array
     std::cout << "Enter the size of the array: ";
     std::cin >> size;
 
@@ -153,14 +150,12 @@ int main() {
         return 1;
     }
 
-    // Dynamically allocate memory for the array
     int* arr = (int*)malloc(size * sizeof(int));
     if (arr == nullptr) {
         std::cerr << "Memory allocation failed." << std::endl;
         return 1;
     }
 
-    // Prompt the user to enter the array elements
     for (int i = 0; i < size; i++) {
         std::cout << "Enter element " << i + 1 << ": ";
         std::cin >> *(arr + i);
@@ -170,7 +165,6 @@ int main() {
 
     std::cout << "Sum of negative numbers: " << result << std::endl;
 
-    // Deallocate memory for the array
     free(arr);
 
     return 0;
@@ -203,7 +197,6 @@ void reverseArray(int* arr, int size) {
 int main() {
     int size;
 
-    // Prompt the user to enter the size of the array
     std::cout << "Enter the size of the array: ";
     std::cin >> size;
 
@@ -212,20 +205,17 @@ int main() {
         return 1;
     }
 
-    // Dynamically allocate memory for the array
     int* arr = (int*)malloc(size * sizeof(int));
     if (arr == nullptr) {
         std::cerr << "Memory allocation failed." << std::endl;
         return 1;
     }
 
-    // Prompt the user to enter the array elements
     for (int i = 0; i < size; i++) {
         std::cout << "Enter element " << i + 1 << ": ";
         std::cin >> *(arr + i);
     }
 
-    // Reverse the array using pointers
     reverseArray(arr, size);
 
     std::cout << "Reversed array:" << std::endl;
@@ -233,7 +223,6 @@ int main() {
         std::cout << *(arr + i) << " ";
     }
 
-    // Deallocate memory for the array
     free(arr);
 
     return 0;
@@ -265,7 +254,6 @@ void transposeMatrix(int** matrix, int n, int m) {
     }
     free(matrix);
 
-    // Update the original matrix pointer to the transposed matrix
     *matrix = transposedMatrix;
 }
 
@@ -281,7 +269,6 @@ void printMatrix(int** matrix, int n, int m) {
 int main() {
     int n, m;
 
-    // Prompt the user to enter the size of the matrix
     std::cout << "Enter the number of rows and columns (n=m): ";
     std::cin >> n >> m;
 
@@ -290,13 +277,11 @@ int main() {
         return 1;
     }
 
-    // Dynamically allocate memory for the original matrix
     int** matrix = (int**)malloc(n * sizeof(int*));
     for (int i = 0; i < n; i++) {
         matrix[i] = (int*)malloc(m * sizeof(int));
     }
 
-    // Prompt the user to enter the matrix elements
     std::cout << "Enter the elements of the matrix:" << std::endl;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -313,7 +298,6 @@ int main() {
     std::cout << "Transposed Matrix:" << std::endl;
     printMatrix(matrix, m, n);
 
-    // Deallocate memory for the transposed matrix
     for (int i = 0; i < m; i++) {
         free(matrix[i]);
     }
@@ -342,7 +326,6 @@ int findIndexOfValue(int* arr, int size, int value) {
 int main() {
     int k, n, m;
 
-    // Prompt the user to enter the length of the array
     std::cout << "Enter the length of the array (k): ";
     std::cin >> k;
 
@@ -351,26 +334,22 @@ int main() {
         return 1;
     }
 
-    // Dynamically allocate memory for the array
     int* arr = (int*)malloc(k * sizeof(int));
     if (arr == nullptr) {
         std::cerr << "Memory allocation failed." << std::endl;
         return 1;
     }
 
-    // Prompt the user to enter the array elements
     std::cout << "Enter the elements of the array:" << std::endl;
     for (int i = 0; i < k; i++) {
         std::cout << "Enter element " << i + 1 << ": ";
         std::cin >> *(arr + i);
     }
 
-    // Prompt the user to enter the value to search for
     int searchValue;
     std::cout << "Enter the value to search for: ";
     std::cin >> searchValue;
 
-    // Find the index of the first occurrence of the search value
     int index = findIndexOfValue(arr, k, searchValue);
 
     if (index != -1) {
@@ -379,7 +358,6 @@ int main() {
         std::cout << searchValue << " not found in the array." << std::endl;
     }
 
-    // Deallocate memory for the array
     free(arr);
 
     return 0;
@@ -435,13 +413,11 @@ int main() {
         return 1;
     }
 
-    // Dynamically allocate memory for the matrix
     int** matrix = (int**)malloc(n * sizeof(int*));
     for (int i = 0; i < n; i++) {
         matrix[i] = (int*)malloc(m * sizeof(int));
     }
 
-    // Prompt the user to enter the matrix elements
     std::cout << "Enter the elements of the matrix:" << std::endl;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -461,7 +437,6 @@ int main() {
     printSums(rowSums, n, "Row Sums");
     printSums(columnSums, m, "Column Sums");
 
-    // Deallocate memory for the matrix and sums
     for (int i = 0; i < n; i++) {
         free(matrix[i]);
     }
