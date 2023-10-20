@@ -1,0 +1,112 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+const int BUFFER_SIZE = 1000;
+
+void displayMenu() {
+    std::cout << "===== Text Editor Menu =====\n";
+    std::cout << "1. Enter Text\n";
+    std::cout << "2. Search for Word\n";
+    std::cout << "3. Replace Word\n";
+    std::cout << "4. Delete Buffer\n";
+    std::cout << "5. Save to File (optional)\n";
+    std::cout << "6. Load from File (optional)\n";
+    std::cout << "7. Exit\n";
+    std::cout << "===========================\n";
+    std::cout << "Select an option: ";
+}
+
+int main() {
+    std::vector<std::string> buffer;
+    int choice;
+
+    while (true) {
+        displayMenu();
+        std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice) {
+            case 1:
+                std::cout << "Enter text to append to the buffer: ";
+                std::string input;
+                std::getline(std::cin, input);
+                buffer.push_back(input);
+                break;
+            case 2:
+                std::cout << "Enter word to search for: ";
+                std::string searchWord;
+                std::getline(std::cin, searchWord);
+                int count = 0;
+                for (const std::string& line : buffer) {
+                    size_t pos = 0;
+                    while ((pos = line.find(searchWord, pos)) != std::string::npos) {
+                        pos += searchWord.length();
+                        count++;
+                    }
+                }
+                std::cout << "Occurrences of '" << searchWord << "': " << count << std::endl;
+                break;
+            case 3:
+                std::cout << "Enter word to replace: ";
+                std::string oldWord;
+                std::getline(std::cin, oldWord);
+                std::cout << "Enter the replacement word: ";
+                std::string newWord;
+                std::getline(std::cin, newWord);
+                for (std::string& line : buffer) {
+                    size_t pos = 0;
+                    while ((pos = line.find(oldWord, pos)) != std::string::npos) {
+                        line.replace(pos, oldWord.length(), newWord);
+                        pos += newWord.length();
+                    }
+                }
+                std::cout << "Word replaced successfully.\n";
+                break;
+            case 4: 
+                buffer.clear();
+                std::cout << "Buffer cleared.\n";
+                break;
+            case 5:
+                std::cout << "Enter a filename to save to: ";
+                std::string saveFileName;
+                std::getline(std::cin, saveFileName);
+                std::ofstream saveFile(saveFileName);
+                if (saveFile.is_open()) {
+                    for (const std::string& line : buffer) {
+                        saveFile << line << '\n';
+                    }
+                    saveFile.close();
+                    std::cout << "File saved successfully.\n";
+                } else {
+                    std::cerr << "Error: Unable to open the file for writing.\n";
+                }
+                break;
+            case 6: //File (optional)
+                std::cout << "Enter a filename to load from: ";
+                std::string loadFileName;
+                std::getline(std::cin, loadFileName);
+                std::ifstream loadFile(loadFileName);
+                if (loadFile.is_open()) {
+                    buffer.clear();
+                    std::string line;
+                    while (std::getline(loadFile, line)) {
+                        buffer.push_back(line);
+                    }
+                    loadFile.close();
+                    std::cout << "File loaded successfully.\n";
+                } else {
+                    std::cerr << "Error: Unable to open the file for reading.\n";
+                }
+                break;
+            case 7:
+                std::cout << "Exiting the text editor. Goodbye!\n";
+                return 0;
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
+    }
+
+    return 0;
+}
