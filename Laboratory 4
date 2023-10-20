@@ -87,7 +87,7 @@ int main() {
     TextEditor editor;
     int choice;
     std::string input;
-    std::string replacement; // Declare 'replacement' here
+    std::string replacement; 
 
     while (true) {
         std::cout << "\nText Editor Menu:\n";
@@ -102,7 +102,7 @@ int main() {
         std::cout << "Enter your choice: ";
 
         std::cin >> choice;
-        std::cin.ignore(); // Consume the newline character
+        std::cin.ignore(); 
 
         switch (choice) {
             case 1:
@@ -119,7 +119,7 @@ int main() {
                 std::cout << "Enter word to replace: ";
                 std::getline(std::cin, input);
                 std::cout << "Enter replacement word: ";
-                std::getline(std::cin, replacement); // Use 'replacement' here
+                std::getline(std::cin, replacement); 
                 editor.ReplaceWord(input, replacement);
                 break;
             case 4:
