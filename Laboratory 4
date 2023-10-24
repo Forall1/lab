@@ -28,7 +28,7 @@ char displayMenu() {
 // Function to enter text and append it to the buffer 
 void enterText() { 
     string input; 
-    cout << "Enter text (empty line to finish):" << endl; 
+    cout << "Enter text :" << endl; 
     while (true) { 
         getline(cin, input); 
         if (input.empty()) { 
