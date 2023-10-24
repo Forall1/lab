@@ -81,7 +81,7 @@ void saveToFile() {
     cout << "Enter the filename to save to: "; 
     cin >> filename; 
  
-    ofstream file("bigone.txt"); 
+    ofstream file("bonzibuddy.txt"); 
     if (!file) { 
         cerr << "Error: Could not open the file for writing." << endl; 
     } else { 
@@ -93,11 +93,11 @@ void saveToFile() {
  
 // Function to load text from a file (optional) 
 void loadFromFile() { 
-    string bigone; 
-    cout << "Enter the bigone.txt to load from: "; 
-    cin >> bigone; 
+    string bonzibuddy; 
+    cout << "Enter the bonzibuddy.txt to load from: "; 
+    cin >> bonzibuddy; 
  
-    ifstream file("bigone.txt"); 
+    ifstream file("bonzibuddy.txt"); 
     if (!file) { 
         cerr << "Error: Could not open the file for reading." << endl; 
     } else { 
