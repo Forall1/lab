@@ -1,152 +1,147 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-
-const int MAX_BUFFER_SIZE = 1000;
-
-class TextEditor {
-private:
-    std::string buffer[MAX_BUFFER_SIZE];
-    int bufferLength = 0;
-
-public:
-    // Append text to the buffer
-    void EnterText(const std::string& text) {
-        if (bufferLength < MAX_BUFFER_SIZE) {
-            buffer[bufferLength++] = text;
-            std::cout << "Text appended to the buffer.\n";
-        } else {
-            std::cerr << "Buffer is full. Cannot append more text.\n";
-        }
-    }
-
-    int SearchWord(const std::string& word) {
-        int count = 0;
-        for (int i = 0; i < bufferLength; i++) {
-            size_t pos = 0;
-            while ((pos = buffer[i].find(word, pos)) != std::string::npos) {
-                count++;
-                pos += word.length();
-            }
-        }
-        return count;
-    }
-
-    void ReplaceWord(const std::string& word, const std::string& replacement) {
-        for (int i = 0; i < bufferLength; i++) {
-            size_t pos = 0;
-            while ((pos = buffer[i].find(word, pos)) != std::string::npos) {
-                buffer[i].replace(pos, word.length(), replacement);
-                pos += replacement.length();
-            }
-        }
-        std::cout << "Word replaced in the buffer.\n";
-    }
-
-    void Delete() {
-        bufferLength = 0;
-        std::cout << "Buffer deleted.\n";
-    }
-
-    void SaveToFile(const std::string& filename) {
-        std::ofstream file(filename);
-        if (file.is_open()) {
-            for (int i = 0; i < bufferLength; i++) {
-                file << buffer[i] << "\n";
-            }
-            file.close();
-            std::cout << "File saved successfully.\n";
-        } else {
-            std::cerr << "Error: Unable to open the file for writing.\n";
-        }
-    }
-
-    void LoadFromFile(const std::string& filename) {
-        std::ifstream file(filename);
-        if (file.is_open()) {
-            bufferLength = 0;
-            std::string line;
-            while (std::getline(file, line) && bufferLength < MAX_BUFFER_SIZE) {
-                buffer[bufferLength++] = line;
-            }
-            file.close();
-            std::cout << "File loaded successfully.\n";
-        } else {
-            std::cerr << "Error: Unable to open the file for reading.\n";
-        }
-    }
-
-    void DisplayBuffer() {
-        for (int i = 0; i < bufferLength; i++) {
-            std::cout << buffer[i] << "\n";
-        }
-    }
-};
-
-int main() {
-    TextEditor editor;
-    int choice;
-    std::string input;
-    std::string replacement; 
-
-    while (true) {
-        std::cout << "\nText Editor Menu:\n";
-        std::cout << "1. Enter Text\n";
-        std::cout << "2. Search for Word\n";
-        std::cout << "3. Replace Word\n";
-        std::cout << "4. Delete\n";
-        std::cout << "5. Save to File\n";
-        std::cout << "6. Load from File\n";
-        std::cout << "7. Display Buffer\n";
-        std::cout << "8. Exit\n";
-        std::cout << "Enter your choice: ";
-
-        std::cin >> choice;
-        std::cin.ignore(); 
-
-        switch (choice) {
-            case 1:
-                std::cout << "Enter text to append: ";
-                std::getline(std::cin, input);
-                editor.EnterText(input);
-                break;
-            case 2:
-                std::cout << "Enter word to search: ";
-                std::getline(std::cin, input);
-                std::cout << "Occurrences: " << editor.SearchWord(input) << "\n";
-                break;
-            case 3:
-                std::cout << "Enter word to replace: ";
-                std::getline(std::cin, input);
-                std::cout << "Enter replacement word: ";
-                std::getline(std::cin, replacement); 
-                editor.ReplaceWord(input, replacement);
-                break;
-            case 4:
-                editor.Delete();
-                break;
-            case 5:
-                std::cout << "Enter filename to save: ";
-                std::getline(std::cin, input);
-                editor.SaveToFile(input);
-                break;
-            case 6:
-                std::cout << "Enter filename to load: ";
-                std::getline(std::cin, input);
-                editor.LoadFromFile(input);
-                break;
-            case 7:
-                std::cout << "\nBuffer Contents:\n";
-                editor.DisplayBuffer();
-                break;
-            case 8:
-                std::cout << "Exiting the program.\n";
-                return 0;
-            default:
-                std::cout << "Invalid choice. Try again.\n";
-        }
-    }
-
-    return 0;
+#include<bits/stdc++.h> 
+#include <fstream> 
+#include <string> 
+ 
+using namespace std; 
+ 
+string buffer; // Global buffer to store text 
+ 
+// Function to display the menu and get the user's choice 
+char displayMenu() { 
+    cout << "Text Editor Menu" << endl; 
+    cout << "1. Enter Text" << endl; 
+    cout << "2. Search for Word" << endl; 
+    cout << "3. Replace Word" << endl; 
+    cout << "4. Delete Buffer" << endl; 
+    cout << "5. Save to File (optional)" << endl; 
+    cout << "6. Load from File (optional)" << endl; 
+    cout << "7. Exit" << endl; 
+    cout << "Enter your choice: "; 
+ 
+    char choice; 
+    cin >> choice; 
+    cin.ignore();  // Consume the newline character 
+ 
+    return choice; 
+} 
+ 
+// Function to enter text and append it to the buffer 
+void enterText() { 
+    string input; 
+    cout << "Enter text (empty line to finish):" << endl; 
+    while (true) { 
+        getline(cin, input); 
+        if (input.empty()) { 
+            break; 
+        } 
+        buffer += input + "\n"; 
+    } 
+} 
+ 
+// Function to search for a word and display the number of occurrences 
+void searchForWord() { 
+    string word; 
+    cout << "Enter the word to search for: "; 
+    cin >> word; 
+ 
+    int count = 0; 
+    size_t pos = 0; 
+    while ((pos = buffer.find(word, pos)) != string::npos) { 
+        count++; 
+        pos += word.length(); 
+    } 
+ 
+    cout << "Occurrences of '" << word << "': " << count << endl; 
+} 
+ 
+// Function to replace a word in the buffer 
+void replaceWord() { 
+    string target, replacement; 
+    cout << "Enter the word to replace: "; 
+    cin >> target; 
+    cout << "Enter the replacement word: "; 
+    cin >> replacement; 
+ 
+    size_t pos = 0; 
+    while ((pos = buffer.find(target, pos)) != string::npos) { 
+        buffer.replace(pos, target.length(), replacement); 
+        pos += replacement.length(); 
+    } 
+} 
+ 
+// Function to delete the entire buffer 
+void deleteBuffer() { 
+    buffer.clear(); 
+    cout << "Buffer has been deleted." << endl; 
+} 
+ 
+// Function to save the buffer to a file (optional) 
+void saveToFile() { 
+    string filename; 
+    cout << "Enter the filename to save to: "; 
+    cin >> filename; 
+ 
+    ofstream file("bigone.txt"); 
+    if (!file) { 
+        cerr << "Error: Could not open the file for writing." << endl; 
+    } else { 
+        file << buffer; 
+        file.close(); 
+        cout << "Buffer has been saved to " << endl; 
+    } 
+} 
+ 
+// Function to load text from a file (optional) 
+void loadFromFile() { 
+    string bigone; 
+    cout << "Enter the bigone.txt to load from: "; 
+    cin >> bigone; 
+ 
+    ifstream file("bigone.txt"); 
+    if (!file) { 
+        cerr << "Error: Could not open the file for reading." << endl; 
+    } else { 
+        buffer.clear(); 
+        string line; 
+        while (getline(file, line)) { 
+            buffer += line + "\n"; 
+        } 
+        file.close(); 
+        cout << "Buffer has been loaded from " << endl; 
+    } 
+} 
+ 
+int main() { 
+    char choice; 
+    do { 
+        choice = displayMenu(); 
+ 
+        switch (choice) { 
+            case '1': 
+                enterText(); 
+                break; 
+            case '2': 
+                searchForWord(); 
+                break; 
+            case '3': 
+                replaceWord(); 
+                break; 
+            case '4': 
+                deleteBuffer(); 
+                break; 
+            case '5': 
+                saveToFile(); 
+                break; 
+            case '6': 
+                loadFromFile(); 
+                break; 
+            case '7': 
+                cout << "Exiting the text editor." << endl; 
+                break; 
+            default: 
+                cout << "Invalid choice. Please try again." << endl; 
+        } 
+    } while (choice != '7'); 
+ 
+    return 0; 
 }
-
