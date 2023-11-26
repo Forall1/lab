@@ -190,7 +190,7 @@ int main() {
         cout << "Enter your choice: ";
         cin >> choice;
 
-        switch (choice) {
+         switch (choice) {
             case 1:
                 do {
                     cout << "Enter the value to insert (-1 to stop): ";
@@ -200,37 +200,61 @@ int main() {
                 } while (value != -1);
                 break;
             case 2:
-                binaryTree.display();
+                if (binaryTree.getRoot() == nullptr) {
+                    cout << "Binary Tree is empty. Please create a tree first (Option 1).\n";
+                } else {
+                    binaryTree.display();
+                }
                 break;
             case 3:
-                cout << "Height of the binary tree: " << binaryTree.height(binaryTree.getRoot()) << endl;
+                if (binaryTree.getRoot() == nullptr) {
+                    cout << "Binary Tree is empty. Please create a tree first (Option 1).\n";
+                } else {
+                    cout << "Height of the binary tree: " << binaryTree.height(binaryTree.getRoot()) << endl;
+                }
                 break;
             case 4:
-                cout << "Number of leaf nodes: " << binaryTree.countLeafNodes(binaryTree.getRoot()) << endl;
+                if (binaryTree.getRoot() == nullptr) {
+                    cout << "Binary Tree is empty. Please create a tree first (Option 1).\n";
+                } else {
+                    cout << "Number of leaf nodes: " << binaryTree.countLeafNodes(binaryTree.getRoot()) << endl;
+                }
                 break;
             case 5:
-                if (binaryTree.isBalanced(binaryTree.getRoot()))
-                    cout << "The binary tree is balanced.\n";
-                else
-                    cout << "The binary tree is not balanced.\n";
+                if (binaryTree.getRoot() == nullptr) {
+                    cout << "Binary Tree is empty. Please create a tree first (Option 1).\n";
+                } else {
+                    if (binaryTree.isBalanced(binaryTree.getRoot()))
+                        cout << "The binary tree is balanced.\n";
+                    else
+                        cout << "The binary tree is not balanced.\n";
+                }
                 break;
             case 6:
-                int n1, n2;
-                cout << "Enter node values to find LCA: ";
-                cin >> n1 >> n2;
-                if (binaryTree.findLowestCommonAncestor(n1, n2) != nullptr)
-                    cout << "Lowest Common Ancestor of " << n1 << " and " << n2 << " is: "
-                         << binaryTree.findLowestCommonAncestor(n1, n2)->data << endl;
-                else
-                    cout << "Lowest Common Ancestor not found for given nodes.\n";
+                if (binaryTree.getRoot() == nullptr) {
+                    cout << "Binary Tree is empty. Please create a tree first (Option 1).\n";
+                } else {
+                    int n1, n2;
+                    cout << "Enter node values to find LCA: ";
+                    cin >> n1 >> n2;
+                    if (binaryTree.findLowestCommonAncestor(n1, n2) != nullptr)
+                        cout << "Lowest Common Ancestor of " << n1 << " and " << n2 << " is: "
+                             << binaryTree.findLowestCommonAncestor(n1, n2)->data << endl;
+                    else
+                        cout << "Lowest Common Ancestor not found for given nodes.\n";
+                }
                 break;
             case 7:
-                cout << "In-order traversal: ";
-                binaryTree.inOrderTraversal(binaryTree.getRoot());
-                cout << endl;
+                if (binaryTree.getRoot() == nullptr) {
+                    cout << "Binary Tree is empty. Please create a tree first (Option 1).\n";
+                } else {
+                    cout << "In-order traversal: ";
+                    binaryTree.inOrderTraversal(binaryTree.getRoot());
+                    cout << endl;
+                }
                 break;
             case 8:
-                cout << "Exiting...\n";
+                cout << "See you around.Goodbye\n";
                 break;
             default:
                 cout << "Invalid choice. Please enter a valid option.\n";
