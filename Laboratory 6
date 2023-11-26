@@ -1,1 +1,242 @@
+#include <iostream>
+#include <queue>
+#include <cmath>
+using namespace std;
 
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int value) {
+        data = value;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+
+class BinaryTree {
+private:
+    Node* root;
+
+public:
+    BinaryTree() {
+        root = nullptr;
+    }
+
+    Node* createNode(int value) {
+        return new Node(value);
+    }
+
+    Node* getRoot() {
+        return root;
+    }
+
+    void insert(int value) {
+        root = insertRecursive(root, value);
+    }
+
+    Node* insertRecursive(Node* currentNode, int value) {
+        if (currentNode == nullptr) {
+            return createNode(value);
+        }
+
+        queue<Node*> q;
+        q.push(currentNode);
+
+        while (!q.empty()) {
+            Node* temp = q.front();
+            q.pop();
+
+            if (temp->left != nullptr) {
+                q.push(temp->left);
+            } else {
+                temp->left = createNode(value);
+                return currentNode;
+            }
+
+            if (temp->right != nullptr) {
+                q.push(temp->right);
+            } else {
+                temp->right = createNode(value);
+                return currentNode;
+            }
+        }
+        return currentNode;
+    }
+
+    // Calculate the height of the binary tree
+    int height(Node* node) {
+        if (node == nullptr)
+            return 0;
+        else {
+            int leftHeight = height(node->left);
+            int rightHeight = height(node->right);
+
+            return max(leftHeight, rightHeight) + 1;
+        }
+    }
+
+    // Count the number of leaf nodes in the binary tree
+    int countLeafNodes(Node* node) {
+        if (node == nullptr)
+            return 0;
+        if (node->left == nullptr && node->right == nullptr)
+            return 1;
+        else
+            return countLeafNodes(node->left) + countLeafNodes(node->right);
+    }
+
+    // Check if the binary tree is balanced
+    bool isBalanced(Node* node) {
+        if (node == nullptr)
+            return true;
+
+        int leftHeight = height(node->left);
+        int rightHeight = height(node->right);
+
+        if (abs(leftHeight - rightHeight) <= 1 &&
+            isBalanced(node->left) &&
+            isBalanced(node->right))
+            return true;
+
+        return false;
+    }
+
+    // Helper function to find LCA of two nodes
+    Node* findLCA(Node* node, int n1, int n2) {
+        if (node == nullptr)
+            return nullptr;
+
+        if (node->data == n1 || node->data == n2)
+            return node;
+
+        Node* leftLCA = findLCA(node->left, n1, n2);
+        Node* rightLCA = findLCA(node->right, n1, n2);
+
+        if (leftLCA && rightLCA)
+            return node;
+
+        return (leftLCA != nullptr) ? leftLCA : rightLCA;
+    }
+
+    // Public function to find LCA of two nodes
+    Node* findLowestCommonAncestor(int n1, int n2) {
+        return findLCA(root, n1, n2);
+    }
+
+    // In-order traversal
+    void inOrderTraversal(Node* node) {
+        if (node == nullptr)
+            return;
+
+        inOrderTraversal(node->left);
+        cout << node->data << " ";
+        inOrderTraversal(node->right);
+    }
+
+    void display() {
+        cout << "Binary Tree:" << endl;
+        displayRecursive(root, 0);
+    }
+
+    void displayRecursive(Node* currentNode, int space) {
+        if (currentNode == nullptr)
+            return;
+
+        space += 5;
+
+        displayRecursive(currentNode->right, space);
+
+        cout << endl;
+        for (int i = 5; i < space; i++)
+            cout << " ";
+
+        cout << currentNode->data << "\n";
+
+        // Draw diagonal lines to the left child
+        if (currentNode->left != nullptr) {
+            for (int i = 5; i < space; i++)
+                cout << " ";
+            cout << " /\n";
+        }
+
+        // Draw diagonal lines to the right child
+        if (currentNode->right != nullptr) {
+            for (int i = 5; i < space; i++)
+                cout << " ";
+            cout << " \\\n";
+        }
+
+        displayRecursive(currentNode->left, space);
+    }
+};
+
+int main() {
+    BinaryTree binaryTree;
+    int choice, value;
+
+    do {
+        cout << "\nBinary Tree Operations\n";
+        cout << "1. Create a new binary tree\n";
+        cout << "2. Display the binary tree\n";
+        cout << "3. Calculate the height of the binary tree\n";
+        cout << "4. Count the number of leaf nodes in the binary tree\n";
+        cout << "5. Check if the binary tree is balanced\n";
+        cout << "6. Find Lowest Common Ancestor (LCA) of two nodes\n";
+        cout << "7. In-order traversal\n";
+        cout << "8. Exit\n";
+
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                do {
+                    cout << "Enter the value to insert (-1 to stop): ";
+                    cin >> value;
+                    if (value != -1)
+                        binaryTree.insert(value);
+                } while (value != -1);
+                break;
+            case 2:
+                binaryTree.display();
+                break;
+            case 3:
+                cout << "Height of the binary tree: " << binaryTree.height(binaryTree.getRoot()) << endl;
+                break;
+            case 4:
+                cout << "Number of leaf nodes: " << binaryTree.countLeafNodes(binaryTree.getRoot()) << endl;
+                break;
+            case 5:
+                if (binaryTree.isBalanced(binaryTree.getRoot()))
+                    cout << "The binary tree is balanced.\n";
+                else
+                    cout << "The binary tree is not balanced.\n";
+                break;
+            case 6:
+                int n1, n2;
+                cout << "Enter node values to find LCA: ";
+                cin >> n1 >> n2;
+                if (binaryTree.findLowestCommonAncestor(n1, n2) != nullptr)
+                    cout << "Lowest Common Ancestor of " << n1 << " and " << n2 << " is: "
+                         << binaryTree.findLowestCommonAncestor(n1, n2)->data << endl;
+                else
+                    cout << "Lowest Common Ancestor not found for given nodes.\n";
+                break;
+            case 7:
+                cout << "In-order traversal: ";
+                binaryTree.inOrderTraversal(binaryTree.getRoot());
+                cout << endl;
+                break;
+            case 8:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid choice. Please enter a valid option.\n";
+                break;
+        }
+    } while (choice != 8);
+
+    return 0;
+}
