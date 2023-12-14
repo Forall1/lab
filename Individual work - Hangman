@@ -1,1 +1,229 @@
+main.cpp
+
+
+#include <iostream>
+#include <ctime>
+#include <random>
+#include "Engine.h"
+
+int main()
+{
+	srand(time(0));
+
+	Engine e;
+
+	e.StartGame();
+
+	return 0;
+}
+
+
+
+
+Engine.h - the declaration of variables, constants, and functions.
+#include <SFML/Graphics.hpp>
+
+class Engine
+{
+public:
+
+	void StartGame();
+	void HandleEvent();
+	void AddLetterToWord(unsigned int key);
+	bool WordFound();
+
+private:
+
+	sf::RenderWindow window;
+	sf::Event ev;
+
+	sf::Sprite mistake_level;
+	sf::Texture mistake_texture;
+
+	sf::Text word;
+	sf::Font arial;
+
+	sf::String word_string;
+
+	const char words[15][100] = { "DEVELOPMENT", "HELLO", "PROGRAM", "GOOGLE" , "ENGINE" , "VEGETABLES" , "COLLABORATION" , "CONTRACT" ,"OCTOPUS" , "INTELLIGENCE" };
+	const char mistakes_img[5][20] = { "Level1.png", "Level2.png" , "Level3.png" , "Level4.png" , "Level5.png" }; //"Level6.png
+	char _word[100];
+	unsigned short word_index;
+	unsigned short word_len;
+	unsigned short mistakes = 0;
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Engine.cpp - the code, function and class declaration
+
+#include <iostream>
+#include <cstring>
+#include <string>
+#include "Engine.h"
+
+void Engine::StartGame()
+{
+	window.create(sf::VideoMode(1200, 1000), "Hangman");
+
+	arial.loadFromFile("leadcoat.ttf");
+	mistake_texture.loadFromFile("Level1.png");
+	mistake_level.setTexture(mistake_texture);
+	mistake_level.setScale(sf::Vector2f(0.9, 0.9));
+
+	word_index = rand() % 10; //random word
+	word_len = strlen(words[word_index]);
+
+
+
+
+	word.setFont(arial);
+	word.setCharacterSize(50);
+	word.setPosition(500, 900);
+	word.setFillColor(sf::Color::Black);
+
+
+	for (unsigned short i = 0; i < word_len; i++ )
+	{
+		if (words[word_index][i] == words[word_index][0] || words[word_index][i] == words[word_index][word_len])
+		{
+			_word[i] = words[word_index][i];
+		}
+		else
+		{
+			_word[i] = '_';
+		}
+	}
+
+	_word[word_len + 1] = '\0';
+	word_string = _word;
+	word.setString(word_string);
+
+
+
+	while (window.isOpen())
+	{
+		HandleEvent();
+
+		window.clear(sf::Color::White);
+
+		window.draw(mistake_level);
+		window.draw(word);
+
+		window.display();
+	}
+}
+
+bool Engine::WordFound()
+{
+	for (int i = 0; i < word_len + 1; i++)
+	{
+		if (_word[i] != words[word_index][i])
+			return false;
+	}
+	return true;
+}
+
+
+void Engine::AddLetterToWord(unsigned int key)
+{
+	bool letter_found = false;
+	char key_char = key + 65;
+
+	for (int i = 1; i < word_len; i++)
+	{
+		if (words[word_index][i] == key_char)
+		{
+			_word[i] = key_char;
+			letter_found = true;
+		}
+	}
+	if (letter_found)
+	{
+		_word[word_len + 1] = '\0';
+		word_string = _word;
+		//word.setString(word_string);
+
+		if (WordFound())
+		{
+			word.setCharacterSize(50);
+			word_string = "You have found the word!";
+		}
+		word.setString(word_string);
+	}
+	else
+	{
+		mistake_texture.loadFromFile(sf::String("") + sf::String(mistakes_img[++mistakes])); //think
+        
+		 if (mistakes == 4)
+		{
+			word_string = "The word was:" + sf::String(words[word_index]);
+			word.setCharacterSize(30);
+			word.setString(word_string);
+			
+		}
+	}
+}
+
+
+
+
+
+void Engine::HandleEvent()
+{
+	while (window.pollEvent(ev))
+	{
+		switch (ev.type)
+		{
+		case sf::Event::Closed:
+			{
+				window.close();
+			
+				break;
+			}
+
+
+		 /*case sf::Event::MouseButtonPressed:
+		{
+			if (ev.mouseButton.button == sf::Mouse::Left)
+			{
+				int x = sf::Mouse::getPosition(window).x;
+				int y = sf::Mouse::getPosition(window).y;
+
+				std::cout << x << ' ' << y << '\n';
+				
+				word.setPosition(sf::Vector2f(x, y));
+			}
+		}
+
+		*/
+		case sf::Event::KeyPressed:
+		{
+			const sf::Keyboard::Key key_code = ev.key.code;
+
+			if (key_code >= sf::Keyboard::A && key_code <= sf::Keyboard::Z)
+			{
+				AddLetterToWord(key_code);
+			}
+		}
+
+			default:
+				break;
+		}
+	}
+}
 
